@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -8,7 +9,7 @@ import (
 	"github.com/cassadab/f1predbot/config"
 )
 
-type StandingsResponse []struct {
+type StandingsResponse struct {
 	Discord string `json:"discord"`
 	Name    string `json:"name"`
 	Country string `json:"country"`
@@ -30,13 +31,23 @@ func GetStandings() string {
 		return discordErrMsg
 	}
 
-	body, err := ioutil.ReadAll(response.Body)
+	responseJson, err := ioutil.ReadAll(response.Body)
+	var data *[]StandingsResponse
+
+	err = json.Unmarshal(responseJson, &data)
 
 	if err != nil {
 		fmt.Println("Error parsing response: " + err.Error())
 		return discordErrMsg
 	}
 
-	fmt.Println(body)
-	return "hi"
+	return FormatStandings(data)
+}
+
+func FormatStandings(standings *[]StandingsResponse) string {
+	var message = ""
+	for i, standing := range *standings {
+		message += fmt.Sprintf("%v. %v %v\n", i+1, standing.Discord, standing.Score)
+	}
+	return message
 }

@@ -36,7 +36,6 @@ func ReadConfig() error {
 	}
 
 	Token = botConfig.Token
-	Prefix = botConfig.Prefix
 	ApiBaseUrl = botConfig.ApiBaseUrl
 	ApiKey = botConfig.ApiKey
 
