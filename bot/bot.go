@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/cassadab/f1predbot/api"
 	"github.com/cassadab/f1predbot/config"
 )
 
@@ -49,7 +50,12 @@ func messageHandler(sesh *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 
-	if message.Content == config.Prefix+"test" {
+	if message.Content == "!test" {
 		_, _ = sesh.ChannelMessageSend(message.ChannelID, "This is a test!")
+	}
+
+	if message.Content == "!predictions" {
+		apiMessage := api.GetStandings()
+		_, _ = sesh.ChannelMessageSend(message.ChannelID, apiMessage)
 	}
 }

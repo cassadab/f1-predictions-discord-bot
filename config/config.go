@@ -7,14 +7,16 @@ import (
 )
 
 var (
-	Token     string
-	Prefix    string
-	botConfig *BotConfig
+	Token      string
+	ApiBaseUrl string
+	ApiKey     string
+	botConfig  *BotConfig
 )
 
 type BotConfig struct {
-	Token  string `json:"token"`
-	Prefix string `json:"botPrefix"`
+	Token      string `json:"token"`
+	ApiBaseUrl string `json:"apiBaseUrl"`
+	ApiKey     string `json:"apiKey"`
 }
 
 func ReadConfig() error {
@@ -35,6 +37,8 @@ func ReadConfig() error {
 
 	Token = botConfig.Token
 	Prefix = botConfig.Prefix
+	ApiBaseUrl = botConfig.ApiBaseUrl
+	ApiKey = botConfig.ApiKey
 
 	return nil
 }
