@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	bot.Start(config.Token)
+	bot.Start()
 
 	<-make(chan struct{})
 	return

@@ -8,12 +8,13 @@ import (
 
 var (
 	Token     string
+	Prefix    string
 	botConfig *BotConfig
 )
 
 type BotConfig struct {
-	Token     string `json:"token"`
-	BotPrefix string `json:"botPrefix"`
+	Token  string `json:"token"`
+	Prefix string `json:"botPrefix"`
 }
 
 func ReadConfig() error {
@@ -31,6 +32,9 @@ func ReadConfig() error {
 		fmt.Println("Error parsing config file")
 		return err
 	}
+
+	Token = botConfig.Token
+	Prefix = botConfig.Prefix
 
 	return nil
 }

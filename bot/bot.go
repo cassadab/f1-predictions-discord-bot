@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/cassadab/f1predbot/config"
 )
 
 var (
@@ -11,8 +12,9 @@ var (
 	session *discordgo.Session
 )
 
-func Start(token string) {
-	session, err := discordgo.New("Bot" + token)
+func Start() {
+	fmt.Println("Creating session")
+	session, err := discordgo.New("Bot " + config.Token)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -30,6 +32,7 @@ func Start(token string) {
 
 	session.AddHandler(messageHandler)
 
+	fmt.Println("Opening connection")
 	err = session.Open()
 
 	if err != nil {
@@ -46,7 +49,7 @@ func messageHandler(sesh *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 
-	if message.Content == "test" {
+	if message.Content == config.Prefix+"test" {
 		_, _ = sesh.ChannelMessageSend(message.ChannelID, "This is a test!")
 	}
 }
