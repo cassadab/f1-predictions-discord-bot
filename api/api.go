@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/cassadab/f1predbot/config"
 )
@@ -45,9 +47,14 @@ func GetStandings() string {
 }
 
 func FormatStandings(standings *[]StandingsResponse) string {
-	var message = ""
+	var message = "**Beeg Yoshi F1 Predictions Standings**\n"
+	tableHeader := fmt.Sprintf("|%5s |%-15s | %5s", "Rank", "Name", "Score|")
+	lineBreak := "\n" + strings.Repeat("-", len(tableHeader)) + "\n"
+	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
 	for i, standing := range *standings {
-		message += fmt.Sprintf("%v. %v %v\n", i+1, standing.Discord, standing.Score)
+		message += fmt.Sprintf("|%5s |%-15s | %5s|\n", strconv.FormatInt(int64(i+1), 10), standing.Name, standing.Score)
+		// message += lineBreak
 	}
+	message += "```"
 	return message
 }
