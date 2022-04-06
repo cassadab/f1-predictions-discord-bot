@@ -1,9 +1,7 @@
 package config
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 var (
@@ -19,25 +17,8 @@ type BotConfig struct {
 	ApiKey     string `json:"apiKey"`
 }
 
-func ReadConfig() error {
-	fmt.Println("Reading config")
-	file, err := ioutil.ReadFile("./config.json")
-
-	if err != nil {
-		fmt.Println("Error reading config file")
-		return err
-	}
-
-	jsonErr := json.Unmarshal(file, &botConfig)
-
-	if jsonErr != nil {
-		fmt.Println("Error parsing config file")
-		return err
-	}
-
-	Token = botConfig.Token
-	ApiBaseUrl = botConfig.ApiBaseUrl
-	ApiKey = botConfig.ApiKey
-
-	return nil
+func ReadConfig() {
+	Token = os.Getenv("TOKEN")
+	ApiBaseUrl = os.Getenv("API_BASE_URL")
+	ApiKey = os.Getenv("API_KEY")
 }
