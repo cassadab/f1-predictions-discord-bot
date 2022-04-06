@@ -51,10 +51,12 @@ func FormatStandings(standings *[]StandingsResponse) string {
 	tableHeader := fmt.Sprintf("|%5s |%-15s | %5s", "Rank", "Name", "Score|")
 	lineBreak := "\n" + strings.Repeat("-", len(tableHeader)) + "\n"
 	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
+
 	for i, standing := range *standings {
 		message += fmt.Sprintf("|%5s |%-15s | %5s|\n", strconv.FormatInt(int64(i+1), 10), standing.Name, standing.Score)
 		// message += lineBreak
 	}
+
 	message += "```"
 	return message
 }
