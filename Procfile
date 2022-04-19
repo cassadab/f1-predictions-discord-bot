@@ -1,0 +1,1 @@
+worker: bin/f1predbot
