@@ -15,7 +15,7 @@ type StandingsResponse struct {
 	Discord string `json:"discord"`
 	Name    string `json:"name"`
 	Country string `json:"country"`
-	Score   string `json:"score"`
+	Score   int    `json:"score"`
 }
 
 var discordErrMsg = "Unable to retrieve standings :("
