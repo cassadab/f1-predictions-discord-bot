@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,42 +18,45 @@ type StandingsResponse struct {
 	Score   int    `json:"score"`
 }
 
-var discordErrMsg = "Unable to retrieve standings :("
+const discordErrMsg = "Unable to retrieve standings :("
 
 func GetStandings() string {
 
 	client := &http.Client{}
-	request, _ := http.NewRequest("GET", config.ApiBaseUrl+"predictions/standings", nil)
+	request, _ := http.NewRequest("GET", config.ApiBaseUrl+"/predictions/standings", nil)
 
 	request.Header.Set("x-api-key", config.ApiKey)
 	response, err := client.Do(request)
-
 	if err != nil {
-		fmt.Println("API Error: " + err.Error())
+		fmt.Printf("api error: %s", err.Error())
 		return discordErrMsg
 	}
+	defer response.Body.Close()
+	responseJson, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Printf("error reading response body: %s", err.Error())
+	}
 
-	responseJson, err := ioutil.ReadAll(response.Body)
-	var data *[]StandingsResponse
+	fmt.Printf("RESPONSE: %v", responseJson)
+	var data []StandingsResponse
 
 	err = json.Unmarshal(responseJson, &data)
-
 	if err != nil {
-		fmt.Println("Error parsing response: " + err.Error())
+		fmt.Printf("error parsing response: %s", err.Error())
 		return discordErrMsg
 	}
 
 	return FormatStandings(data)
 }
 
-func FormatStandings(standings *[]StandingsResponse) string {
+func FormatStandings(standings []StandingsResponse) string {
 	var message = "**Beeg Yoshi F1 Predictions Standings**\n"
-	tableHeader := fmt.Sprintf("|%5s |%-15s | %5s", "Rank", "Name", "Score|")
+	tableHeader := fmt.Sprintf("|%5s |%-20s |%-20s | %5s", "Rank", "Discord", "Name", "Score|")
 	lineBreak := "\n" + strings.Repeat("-", len(tableHeader)) + "\n"
 	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
 
-	for i, standing := range *standings {
-		message += fmt.Sprintf("|%5s |%-15s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Name, standing.Score)
+	for i, standing := range standings {
+		message += fmt.Sprintf("|%5s |%-20s |%-20s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Discord, standing.Name, standing.Score)
 		// message += lineBreak
 	}
 
