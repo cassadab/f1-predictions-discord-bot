@@ -12,7 +12,7 @@ import (
 )
 
 type StandingsResponse struct {
-	// Discord string `json:"discord"`
+	Discord string `json:"discord"`
 	Name    string `json:"name"`
 	Country string `json:"country"`
 	Score   int    `json:"score"`
@@ -56,7 +56,7 @@ func FormatStandings(standings []StandingsResponse) string {
 	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
 
 	for i, standing := range standings {
-		message += fmt.Sprintf("|%5s |%-20s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Name, standing.Score)
+		message += fmt.Sprintf("|%5s |%-20s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Discord, standing.Score)
 		// message += lineBreak
 	}
 
