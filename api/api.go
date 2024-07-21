@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ type StandingsResponse struct {
 	Score   int    `json:"score"`
 }
 
-var discordErrMsg = "Unable to retrieve standings :("
+const discordErrMsg = "Unable to retrieve standings :("
 
 func GetStandings() string {
 
@@ -27,20 +27,20 @@ func GetStandings() string {
 
 	request.Header.Set("x-api-key", config.ApiKey)
 	response, err := client.Do(request)
-
 	if err != nil {
 		fmt.Printf("api error: %s", err.Error())
 		return discordErrMsg
 	}
-
-	responseJson, err := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+	responseJson, err := io.ReadAll(response.Body)
 	if err != nil {
 		fmt.Printf("error reading response body: %s", err.Error())
 	}
+
+	fmt.Printf("RESPONSE: %v", responseJson)
 	var data []StandingsResponse
 
 	err = json.Unmarshal(responseJson, &data)
-
 	if err != nil {
 		fmt.Printf("error parsing response: %s", err.Error())
 		return discordErrMsg
