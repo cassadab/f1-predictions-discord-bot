@@ -12,7 +12,7 @@ import (
 )
 
 type StandingsResponse struct {
-	Discord string `json:"discord"`
+	// Discord string `json:"discord"`
 	Name    string `json:"name"`
 	Country string `json:"country"`
 	Score   int    `json:"score"`
@@ -29,30 +29,33 @@ func GetStandings() string {
 	response, err := client.Do(request)
 
 	if err != nil {
-		fmt.Println("API Error: " + err.Error())
+		fmt.Printf("api error: %s", err.Error())
 		return discordErrMsg
 	}
 
 	responseJson, err := ioutil.ReadAll(response.Body)
-	var data *[]StandingsResponse
+	if err != nil {
+		fmt.Printf("error reading response body: %s", err.Error())
+	}
+	var data []StandingsResponse
 
 	err = json.Unmarshal(responseJson, &data)
 
 	if err != nil {
-		fmt.Println("Error parsing response: " + err.Error())
+		fmt.Printf("error parsing response: %s", err.Error())
 		return discordErrMsg
 	}
 
 	return FormatStandings(data)
 }
 
-func FormatStandings(standings *[]StandingsResponse) string {
+func FormatStandings(standings []StandingsResponse) string {
 	var message = "**Beeg Yoshi F1 Predictions Standings**\n"
 	tableHeader := fmt.Sprintf("|%5s |%-15s | %5s", "Rank", "Name", "Score|")
 	lineBreak := "\n" + strings.Repeat("-", len(tableHeader)) + "\n"
 	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
 
-	for i, standing := range *standings {
+	for i, standing := range standings {
 		message += fmt.Sprintf("|%5s |%-15s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Name, standing.Score)
 		// message += lineBreak
 	}
