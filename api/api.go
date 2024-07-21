@@ -51,12 +51,12 @@ func GetStandings() string {
 
 func FormatStandings(standings []StandingsResponse) string {
 	var message = "**Beeg Yoshi F1 Predictions Standings**\n"
-	tableHeader := fmt.Sprintf("|%5s |%-15s |%-20s | %5s", "Rank", "Discord", "Name", "Score|")
+	tableHeader := fmt.Sprintf("|%5s |%-20s |%-20s | %5s", "Rank", "Discord", "Name", "Score|")
 	lineBreak := "\n" + strings.Repeat("-", len(tableHeader)) + "\n"
 	message += "```" + "\n" + lineBreak + tableHeader + lineBreak
 
 	for i, standing := range standings {
-		message += fmt.Sprintf("|%5s |%-15s |%-20s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Discord, standing.Name, standing.Score)
+		message += fmt.Sprintf("|%5s |%-20s |%-20s | %5d|\n", strconv.FormatInt(int64(i+1), 10), standing.Discord, standing.Name, standing.Score)
 		// message += lineBreak
 	}
 
