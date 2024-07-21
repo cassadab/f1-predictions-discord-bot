@@ -23,7 +23,7 @@ const discordErrMsg = "Unable to retrieve standings :("
 func GetStandings() string {
 
 	client := &http.Client{}
-	request, _ := http.NewRequest("GET", config.ApiBaseUrl+"predictions/standings", nil)
+	request, _ := http.NewRequest("GET", config.ApiBaseUrl+"/predictions/standings", nil)
 
 	request.Header.Set("x-api-key", config.ApiKey)
 	response, err := client.Do(request)
